@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerShipMovement : MonoBehaviour {
 
 	private Rigidbody rigidBody;
-	public float speed = 0, accl = 15, decl = 15, rollspeed = 5;
+	public float speed = 0, accl = 15, decl = 15, rollspeed = 5, max_rollspd = 100, yawspeed = 5;
 	public int sensitivity = 100;
 
 	Vector3 angVel;
@@ -13,6 +13,9 @@ public class PlayerShipMovement : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		rigidBody = GetComponent<Rigidbody>();
+		Screen.lockCursor = true;
+		MeshRenderer mesh = GetComponent<MeshRenderer>();
+		Debug.Log (mesh.bounds.size.x);
 	}
 	
 	// Update is called once per frame
@@ -22,20 +25,42 @@ public class PlayerShipMovement : MonoBehaviour {
 	void FixedUpdate() {
 
 		//pitch
-		angVel.x += -Input.GetAxis("Vertical") * Mathf.Abs(-Input.GetAxis("Vertical")) * sensitivity * Time.fixedDeltaTime;
+		angVel.x += -Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime;
 
-		//roll and yaw
+		//yaw
+
+		angVel.y += Input.GetAxis ("Mouse X") * yawspeed * Time.fixedDeltaTime;
+
+//		if (Input.GetKey (KeyCode.D)) {
+//			
+//			angVel.y += yawspeed;
+//		} else if (Input.GetKey (KeyCode.A)) {
+//			
+//			angVel.y -= yawspeed;
+//		}
+//
+		//roll
 		if (Input.GetKey (KeyCode.E)) {
 
-			angVel.z += rollspeed;
+			if (Mathf.Abs(angVel.z) <= max_rollspd) {
+				angVel.z += rollspeed;
+			}
 		} else if (Input.GetKey (KeyCode.Q)) {
 
-			angVel.z -= rollspeed;
+			if (Mathf.Abs(angVel.z) <= max_rollspd) {
+				angVel.z -= rollspeed;
+			}
 		}
+
+		else if (angVel.z > 0) {
+			angVel.z -= 5;
+		} else if (angVel.z < 0) {
+			angVel.z += 5;
+		}
+
 
 		//angular velocity limit
 		// angVel -= angVel.normalized * angVel.sqrMagnitude * .08f * Time.fixedDeltaTime;
-
 
 		//Rotate
 		Quaternion deltaRotation = Quaternion.Euler (angVel * Time.fixedDeltaTime);
@@ -48,6 +73,7 @@ public class PlayerShipMovement : MonoBehaviour {
 			speed -= decl * Time.fixedDeltaTime;
 		} else if (Input.GetKey (KeyCode.Space)) {
 			speed = 0;
+			angVel.Set (0, 0, 0);
 		}
 
 
