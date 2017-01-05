@@ -28,7 +28,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1507939953397612
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,7 +78,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1507939953397612}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0.4, z: 2}
+  m_LocalPosition: {x: 0, y: 0.5, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4239369839415592}
@@ -91,8 +91,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1915294329498374}
-  m_LocalRotation: {x: 0.19961977, y: 0.7501925, z: 0.45828214, w: -0.43282872}
-  m_LocalPosition: {x: -14.941956, y: -22.82192, z: -288.6168}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4019457033205890}
@@ -264,6 +264,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097cdd29ecc144492b2b36f0a469b1cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  threshold: 100
+  physicsThreshold: 1000
+  defaultSleepThreshold: 0.14
 --- !u!114 &114650394021040866
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -286,9 +289,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff0b8a7d68dd14aa2a6df603e45e6e8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxStars: 100
+  maxStars: 10000
   starSize: 0.2
-  radius: 100
+  radius: 1000
 --- !u!124 &124410587918518606
 Behaviour:
   m_ObjectHideFlags: 1
@@ -351,7 +354,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: -175256950
+  randomSeed: -833917564
   InitialModule:
     serializedVersion: 3
     enabled: 1
