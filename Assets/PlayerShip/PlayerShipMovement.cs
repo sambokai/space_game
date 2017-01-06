@@ -5,31 +5,42 @@ using UnityEngine;
 public class PlayerShipMovement : MonoBehaviour {
 
 	private Rigidbody rigidBody;
-	public float speed = 0, accl = 15, decl = 15, rollspeed = 5, max_rollspd = 100, yawspeed = 5;
-	public int sensitivity = 100;
+	public float speed = 0, accl = 15, decl = 15, rollspeed = 5, max_rollspd = 100;
+	private int throttle;
+	public float pitch_sensitivity = 70;
+	public float yaw_sensitivity = 70;
+
+	private Vector3 mousePercFromCenter;
+	private Vector3 windowCenter;
 
 	Vector3 angVel;
 
 	// Use this for initialization
 	void Start() {
 		rigidBody = GetComponent<Rigidbody>();
-		Screen.lockCursor = true;
+		//Screen.lockCursor = true;
+		Cursor.visible = false;
 		MeshRenderer mesh = GetComponent<MeshRenderer>();
-		Debug.Log (mesh.bounds.size.x);
+		resetMovement ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		updateMousePercFromCenter ();
 	}
-
+		
 	void FixedUpdate() {
 
-		//pitch
-		angVel.x += -Input.GetAxis("Mouse Y") * sensitivity * Time.fixedDeltaTime;
+		if (mouseOnScreen()) {
+			//pitch
+			angVel.x = pitch_sensitivity * mousePercFromCenter.y;
+			//yaw
+			angVel.y = yaw_sensitivity * mousePercFromCenter.x;
+		} else {
+			angVel.x = 0;	
+			angVel.y = 0;
+		}
 
-		//yaw
-
-		angVel.y += Input.GetAxis ("Mouse X") * yawspeed * Time.fixedDeltaTime;
 
 //		if (Input.GetKey (KeyCode.D)) {
 //			
@@ -72,12 +83,35 @@ public class PlayerShipMovement : MonoBehaviour {
 		} else if (Input.GetKey (KeyCode.LeftControl)) {
 			speed -= decl * Time.fixedDeltaTime;
 		} else if (Input.GetKey (KeyCode.Space)) {
-			speed = 0;
-			angVel.Set (0, 0, 0);
+			resetMovement ();
 		}
 
 
 
 		rigidBody.velocity = (transform.forward * -speed) * Time.fixedDeltaTime;
+	}
+
+	void updateMousePercFromCenter()
+	{
+		updateWindowCenter();
+		mousePercFromCenter = Input.mousePosition;
+		mousePercFromCenter.x = mousePercFromCenter.x / windowCenter.x - 1;
+		mousePercFromCenter.y = mousePercFromCenter.y / windowCenter.y - 1;
+	}
+
+	bool mouseOnScreen()
+	{
+		return mousePercFromCenter.y >= -1 && mousePercFromCenter.y <= 1 && mousePercFromCenter.x >= -1 && mousePercFromCenter.x <= 1;
+	}
+
+	void updateWindowCenter()
+	{
+		windowCenter.Set (Screen.width / 2, Screen.height / 2, 0);
+	}
+
+	void resetMovement()
+	{
+		speed = 0;
+		angVel.Set (0, 0, 0);
 	}
 }
